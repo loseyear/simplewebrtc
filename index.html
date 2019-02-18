@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title></title>
+</head>
+<body>
+<video id="myVideo"></video>
+<div id="videocontent"></div>
+<script
+  src="https://code.jquery.com/jquery-3.3.1.js"
+  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+  crossorigin="anonymous"></script>
+<script src="./simplewebrtc-with-adapter.bundle.js"></script>
+<script>
+webrtc = new SimpleWebRTC({
+  localVideoEl: 'myVideo',
+  remoteVideosEl: '',
+  autoRequestMedia: true,
+  debug: false,
+  detectSpeakingEvents: true,
+  media: {
+    video: true,
+    audio: true,
+  },
+  autoAdjustMic: true,
+})
+
+webrtc.on('videoAdded', function (video, peer) {
+  $(video).appendTo('body')
+  $(video).attr('id', 'dest-' + peer.id)
+})
+
+webrtc.on('videoRemoved', function (video, peer) {
+    var dest = $('video[id="dest-' + peer.id + '"]')
+    dest && dest.remove()
+});
+webrtc.joinRoom('video')
+</script>
+</body>
+</html>
